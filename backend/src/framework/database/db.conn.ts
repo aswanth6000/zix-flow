@@ -9,7 +9,6 @@ export const dbConnection = async (DB_URL: string) => {
     console.error('DB_URL not found in environment variables');
     return;
   }
-
   try {
     mongoose.set('strictQuery', true);
     await mongoose.connect(uri);

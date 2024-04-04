@@ -3,8 +3,6 @@ import { dbConnection } from "./database/db.conn";
 import dotenv from "dotenv";
 
 dotenv.config();
-console.log(process.env);
-
 
 const app: Express = express();
 const port = process.env.PORT || 8080;
