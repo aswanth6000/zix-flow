@@ -37,7 +37,6 @@ export class UserRepository implements IUserUsecase {
             // Insert the new contact if not already exists
             const newUser = new this.UserModel(user);
             await newUser.save();
-            console.log('New user added:', newUser);
             return newUser
 
         } catch (error) {
