@@ -6,7 +6,7 @@ export interface IUser extends Document{
     firstName: string;
     lastName: string;
     gender: 'MALE' | 'FEMALE' | 'OTHERS';
-    address: IAddress;
+    address:[ IAddress];
     email: string;
     phone: string;
     other?: Record<string, any>;
