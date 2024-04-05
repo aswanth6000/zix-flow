@@ -18,10 +18,10 @@ export class UserRouter{
         this.router.post('/addContacts', (req: Request, res: Response) => {
             this.userController.addNewContacts(req, res)
         })
-        this.router.put('/updateContact/:contactId', (req: Request, res: Response) => {
+        this.router.put('/updateContact/:userId', (req: Request, res: Response) => {
             this.userController.updateContact(req, res)
         })
-        this.router.delete('/deleteContact/:contactId', (req: Request, res: Response)=>{
+        this.router.delete('/deleteContact/:userId', (req: Request, res: Response)=>{
             this.userController.deleteContact(req, res)
         })
     }

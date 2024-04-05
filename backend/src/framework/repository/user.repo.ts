@@ -13,7 +13,8 @@ export class UserRepository implements IUserUsecase {
     }
     async getAllContacts(): Promise<any> {
         try {
-            const allContacts = await this.UserModel.find({});
+            const allContacts = await this.UserModel.find();
+            console.log(allContacts);
             return allContacts;
         } catch (error) {
             console.error("Error: ", error);
@@ -27,7 +28,9 @@ export class UserRepository implements IUserUsecase {
                 throw new Error('UserModel not available');
             }
             const exestingUser = await this.UserModel.find({ $or: [{ email }, { phone }] })
-            if (exestingUser) {
+            console.log('sssssss',exestingUser);
+            
+            if (exestingUser.length > 0) {
                 console.error('User already exists with email and phone');
                 throw new Error('User with the same email or phone number already exists');
             }

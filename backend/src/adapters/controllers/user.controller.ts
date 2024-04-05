@@ -2,47 +2,50 @@ import { Request, Response } from "express";
 import { UserUsecase } from "../../usecases/user.usecase";
 
 
-export class UserController{
+export class UserController {
     private readonly userUsecase: UserUsecase;
     constructor(userUsecase: UserUsecase) {
-      this.userUsecase = userUsecase;
+        this.userUsecase = userUsecase;
     }
-    async getAllContacts(req: Request, res: Response){
+    async getAllContacts(req: Request, res: Response) {
         try {
             const users = await this.userUsecase.getAllContacts()
             return res.status(200).json(users)
         } catch (error) {
+            return res.status(204).json(error)
+        }
+    }
+    async addNewContacts(req: Request, res: Response) {
+        try {
+            const data = req.body
+
+            const users = await this.userUsecase.addNewContacts(data)
+
+            if (users) {
+                return res.status(200).json({ message: 'Contacts added successfully' })
+            }
+        } catch (error) {
+            return res.status(208).json(error)
+        }
+    }
+    async updateContact(req: Request, res: Response) {
+        try {
+            const id = req.params.userId
+            const data = req.body
+            const updateContact = await this.userUsecase.updateContact(id, data)
+            return res.status(200).json({ message: 'Contact updated successfully', data: updateContact })
+        } catch (error) {
             return res.status(404).json(error)
         }
     }
-    async addNewContacts(req: Request, res: Response){
+    async deleteContact(req: Request, res: Response) {
         try {
-            const data = req.body
-            const users = await this.userUsecase.addNewContacts(data)
-            if(users){
-                return res.status(200).json({message: 'Contacts added successfully'})
-            }
-        } catch (error) {
-            return res.status(500).json(error)
-        }
-    }
-    async updateContact(req: Request, res: Response){
-        try {
-            const id = req.params.id
-            const data = req.body
-            const updateContact = await this.userUsecase.updateContact(id, data)
-            return res.status(200).json({message: 'Contact updated successfully', data: updateContact})
-        } catch (error) {
-            return res.status(500).json(error)
-        }
-    }
-    async deleteContact(req: Request, res: Response){
-        try {
-        const id = req.params.id
+            const id = req.params.userId
+
             const deleteContact = await this.userUsecase.deleteContact(id)
-            return res.status(200).json({message: 'Contact deleted successfully', deleteContact})
+            return res.status(200).json({ message: 'Contact deleted successfully', deleteContact })
         } catch (error) {
-            return res.status(500).json(error)
-        }        
+            return res.status(404).json(error)
+        }
     }
 }

@@ -8,8 +8,11 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 8080;
 const DB_URL = process.env.DB_URL!
-app.use(userRouter)
 
+
+app.use(express.json())
+app.use(userRouter)
+app.use(express.urlencoded({extended: true}))
 
 app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
