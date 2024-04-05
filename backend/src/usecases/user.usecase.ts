@@ -6,10 +6,10 @@ export class UserUsecase implements IUserUsecase{
     async getAllContacts(): Promise<any> {
         return this.userRepository.getAllContacts()
     }
-    async addNewContacts(user: IUser): Promise<void> {
+    async addNewContacts(user: IUser): Promise<IUser> {
         return this.userRepository.addNewContacts(user)
     }
-    async updateContact(id: string, data: IUser): Promise<void> {
+    async updateContact(id: string, data: IUser): Promise<any> {
         return this.userRepository.updateContact(id, data)
     }
     async deleteContact(id: string): Promise<void> {

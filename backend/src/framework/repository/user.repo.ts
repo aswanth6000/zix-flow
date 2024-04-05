@@ -19,7 +19,7 @@ export class UserRepository implements IUserUsecase {
             console.error("Error: ", error);
         }
     }
-    async addNewContacts(user: IUser): Promise<void> {
+    async addNewContacts(user: IUser): Promise<IUser> {
         try {
             const email = user.email;
             const phone = user.phone
@@ -35,12 +35,13 @@ export class UserRepository implements IUserUsecase {
             const newUser = new this.UserModel(user);
             await newUser.save();
             console.log('New user added:', newUser);
+            return newUser
 
         } catch (error) {
             throw error;
         }
     }
-    async updateContact(id: string, data: IUser): Promise<void> {
+    async updateContact(id: string, data: IUser): Promise<any> {
         try {
             // Validate input parameters
             if (!id || typeof id !== 'string') {
@@ -57,7 +58,9 @@ export class UserRepository implements IUserUsecase {
             }
 
             // Update the contact
-            await this.UserModel.findByIdAndUpdate(id, data);
+            const updateContact = await this.UserModel.findByIdAndUpdate(id, data);
+                return updateContact
+
         } catch (error) {
             throw error;
         }
