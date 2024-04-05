@@ -3,16 +3,16 @@ import { IUserUsecase } from "../adapters/interfaces/IUserUsecase.interface";
 import { UserRepository } from "../framework/repository/user.repo";
 export class UserUsecase implements IUserUsecase{
     constructor(private userRepository: UserRepository) {}
-    async getAllContacts(): Promise<void> {
+    async getAllContacts(): Promise<any> {
         return this.userRepository.getAllContacts()
     }
     async addNewContacts(user: IUser): Promise<void> {
         return this.userRepository.addNewContacts(user)
     }
-    async updateContact(): Promise<void> {
-        
+    async updateContact(id: string, data: IUser): Promise<void> {
+        return this.userRepository.updateContact(id, data)
     }
-    async deleteContact(): Promise<void> {
-        
+    async deleteContact(id: string): Promise<void> {
+        return this.userRepository.deleteContact(id)
     }
 }
