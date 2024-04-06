@@ -12,7 +12,7 @@ export class UserRouter{
     userController = new UserController(this.userUseCase)
 
     constructor(){
-        this.router.get('/getAllContacts', (req: Request, res: Response) => {
+        this.router.get('/allContacts', (req: Request, res: Response) => {
             this.userController.getAllContacts(req, res)
         })
         this.router.post('/addContacts', (req: Request, res: Response) => {
