@@ -11,11 +11,12 @@ export class UserRepository implements IUserUsecase {
     constructor(UserModel: Model<IUser>) {
         this.UserModel = UserModel;
     }
-    async getAllContacts(): Promise<any> {
+    async getAllContacts(page: number): Promise<any> {
         try {
-            const allContacts = await this.UserModel.find();
-            console.log(allContacts);
-            return allContacts;
+            const PAGE_SIZE = 5
+            const allusers = await this.UserModel.find({}).limit(PAGE_SIZE).skip(PAGE_SIZE * page)
+            const total = await this.UserModel.countDocuments({})
+            return { total, allusers, PAGE_SIZE };
         } catch (error) {
             console.error("Error: ", error);
         }
@@ -28,8 +29,8 @@ export class UserRepository implements IUserUsecase {
                 throw new Error('UserModel not available');
             }
             const exestingUser = await this.UserModel.find({ $or: [{ email }, { phone }] })
-            console.log('sssssss',exestingUser);
-            
+            console.log('sssssss', exestingUser);
+
             if (exestingUser.length > 0) {
                 console.error('User already exists with email and phone');
                 throw new Error('User with the same email or phone number already exists');
@@ -61,7 +62,7 @@ export class UserRepository implements IUserUsecase {
 
             // Update the contact
             const updateContact = await this.UserModel.findByIdAndUpdate(id, data);
-                return updateContact
+            return updateContact
 
         } catch (error) {
             throw error;

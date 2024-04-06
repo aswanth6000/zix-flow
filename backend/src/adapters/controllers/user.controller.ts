@@ -9,8 +9,9 @@ export class UserController {
     }
     async getAllContacts(req: Request, res: Response) {
         try {
-            const users = await this.userUsecase.getAllContacts()
-            return res.status(200).json(users)
+            const page: number = parseInt(req.query.page as string || '0', 5);   
+            const {allusers, PAGE_SIZE, total} = await this.userUsecase.getAllContacts(page)
+            res.status(200).json({ message: 'user data fetched successfully', allusers, totalPages: Math.ceil(total / PAGE_SIZE) })
         } catch (error) {
             return res.status(204).json(error)
         }

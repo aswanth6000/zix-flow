@@ -3,8 +3,8 @@ import { IUserUsecase } from "../adapters/interfaces/IUserUsecase.interface";
 import { UserRepository } from "../framework/repository/user.repo";
 export class UserUsecase implements IUserUsecase{
     constructor(private userRepository: UserRepository) {}
-    async getAllContacts(): Promise<any> {
-        return this.userRepository.getAllContacts()
+    async getAllContacts(page: number): Promise<any> {
+        return this.userRepository.getAllContacts(page)
     }
     async addNewContacts(user: IUser): Promise<IUser> {
         return this.userRepository.addNewContacts(user)
