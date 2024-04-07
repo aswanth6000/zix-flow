@@ -29,12 +29,14 @@ export default function AllContacts() {
   const [data, setData] = useState<ApiResponse[]>();
 
   useEffect(() => {
-    fetchData(pageNumber); // Call fetchData when component mounts or when pageNumber changes
+    fetchData(pageNumber); // Call fetchData when component mounts or when pageNumber changes    
   }, [pageNumber]);
 
   const fetchData = (page: number) => {
     axios.get(`/allContacts?page=${page}`)
       .then((response) => {
+        console.log(response.data.totalPages);
+        
         setData(response.data.allusers);
         setTotalPages(response.data.totalPages);
       })
@@ -85,8 +87,8 @@ export default function AllContacts() {
       .catch((error: Error) => console.error("Error deleting contact:", error));
   };
 
-  function handlePageChange(page: number): void {
-    setPagenumber(page)
+  function handlePageChange(page: number, pageSize: any): void {
+    setPagenumber(page - 1)
   }
 
   return (
@@ -355,7 +357,7 @@ export default function AllContacts() {
             ))}
         </tbody>
       </table>
-      <Pagination defaultCurrent={1} total={totalPages * 5} onChange={handlePageChange} />
+      <Pagination defaultCurrent={1} total={totalPages * 10} onChange={(page, pageSize)=>handlePageChange(page, pageSize)} />
     </main>
   );
 }

@@ -17,6 +17,7 @@ import { toast } from "sonner"
 
 
 export function DialogDemo({fetchData}: any) {
+    const [open, setOpen] = useState(false)
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -59,24 +60,43 @@ export function DialogDemo({fetchData}: any) {
             return true;
         }
         
-        if(!isEmpty(formData)){
+        if(isEmpty(formData)){
             toast.error("Fill the inputs")
             return 
         }
         
         try {
           const response = await axios.post("/addContacts", formData);
-          fetchData()
-          console.log("Data saved:", response.data);
+          if(response.status === 200){
+            setOpen(false)
+            fetchData()
+            toast.success("Data has been added successfully")
+            setFormData({
+                firstName: "",
+                lastName: "",
+                phone: "",
+                email: "",
+                gender: "",
+                address: {
+                    city: "",
+                    country: "",
+                    zipCode: "",
+                    line1: '',
+                    line2: ''
+                }
+            });
+            return 
+          }
+          toast.error( response.data.message)
         } catch (error) {
           console.error("Error saving data:", error);
           // Optionally show an error message to the user
         }
       };
   return (
-    <Dialog>
+    <Dialog >
       <DialogTrigger asChild>
-        <Button variant="outline">Add contact</Button>
+        <Button variant="outline" onClick={()=> setOpen(true)}>Add contact</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
