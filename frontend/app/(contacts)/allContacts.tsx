@@ -11,7 +11,7 @@ import Loading from "../(Loading)/Loading";
 
 export default function AllContacts() {
   const [loading, setLoading] = useState(true);
-  const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
+  const [deleteId, setDeleteId] = useState('');
   const [pageNumber, setPagenumber] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [data, setData] = useState<ApiResponse[]>();
@@ -71,32 +71,25 @@ export default function AllContacts() {
       });
   };
 
-  const handleSelectContact = (id: string) => {
-    const isSelected = selectedContacts.includes(id);
-    if (isSelected) {
-      setSelectedContacts((prevSelected) =>
-        prevSelected.filter((contactId) => contactId !== id)
-      );
-    } else {
-      setSelectedContacts((prevSelected) => [...prevSelected, id]);
-    }
-  };
 
-  // Function to handle deletion of selected contacts
-  const handleDeleteSelected = async () => {
-    try {
-      await Promise.all(
-        selectedContacts.map((id) => axios.delete(`/deleteContact/${id}`))
-      );
-      setSelectedContacts([]);
-      fetchData(pageNumber); // refetch data after deletion
-      toast.success("Selected contacts deleted successfully");
-    } catch (error) {
-      toast.error("An error occurred while deleting contacts");
-      console.error(error);
-    }
-  };
 
+  // Function to handle deletion of selected contact
+  const handleDelete = () => {
+    // Make API call to delete the contact
+    axios
+      .delete(`/deleteContact/${deleteId}`)
+      .then(() => {
+        toast.success("Contact deleted successfully")
+        fetchData(pageNumber); 
+      })
+      .catch((error: Error) => {
+        toast.error("Error deleting contact")
+        console.error("Error deleting contact:", error)
+    });
+  };
+  const checkContact = (id: string) =>{    
+    setDeleteId(id)
+  }
   function handlePageChange(page: number, pageSize: any): void {
     setPagenumber(page - 1);
   }
@@ -360,8 +353,7 @@ export default function AllContacts() {
                 <td className="border border-gray-400 px-4 py-2">
                   <Checkbox
                     id={user._id}
-                    onChange={() => handleSelectContact(user._id)}
-                    checked={selectedContacts.includes(user._id)}
+                    onClick={()=>checkContact(user._id)}
                   />
                 </td>
               </tr>
@@ -371,7 +363,7 @@ export default function AllContacts() {
       <Button
         variant="destructive"
         className="mt-6"
-        onClick={handleDeleteSelected}
+        onClick={handleDelete}
       >
         Delete
       </Button>
