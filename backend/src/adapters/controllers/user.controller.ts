@@ -26,7 +26,7 @@ export class UserController {
                 return res.status(200).json({ message: 'Contacts added successfully' })
             }
         } catch (error) {
-            return res.status(208).json(error)
+            return res.status(400).json({ message: error });
         }
     }
     async updateContact(req: Request, res: Response) {
@@ -36,7 +36,7 @@ export class UserController {
             const updateContact = await this.userUsecase.updateContact(id, data)
             return res.status(200).json({ message: 'Contact updated successfully', data: updateContact })
         } catch (error) {
-            return res.status(404).json(error)
+            return res.status(409).json(error)
         }
     }
     async deleteContact(req: Request, res: Response) {
