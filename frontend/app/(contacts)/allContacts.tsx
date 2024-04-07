@@ -3,6 +3,7 @@ import axios from "../../config/axios";
 import { Pagination } from "antd";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useEffect, useState } from "react";
+import { DialogDemo } from "./addContact";
 
 interface ApiResponse {
   _id: string;
@@ -28,18 +29,17 @@ export default function AllContacts() {
   const [data, setData] = useState<ApiResponse[]>();
 
   useEffect(() => {
-    function fetchData() {
-      axios
-        .get(`/allContacts?page=${pageNumber}`)
-        .then((response: any) => {
-          setData(response.data.allusers);
-          setTotalPages(response.data.totalPages);
-        })
-        .catch((error: any) => console.error(error));
-    };
-    fetchData();
-  },  [pageNumber]);
-  console.log(data);
+    fetchData(pageNumber); // Call fetchData when component mounts or when pageNumber changes
+  }, [pageNumber]);
+
+  const fetchData = (page: number) => {
+    axios.get(`/allContacts?page=${page}`)
+      .then((response) => {
+        setData(response.data.allusers);
+        setTotalPages(response.data.totalPages);
+      })
+      .catch((error) => console.error(error));
+  };
 
   const handleInputChange = (
     id: string,
@@ -91,6 +91,7 @@ export default function AllContacts() {
 
   return (
     <main className="max-w-8xl mx-auto px-4 py-8">
+    <DialogDemo fetchData={fetchData}/>
       <table className="w-full border-collapse">
         <caption className="text-lg mb-4">All Addresses</caption>
         <thead>
@@ -100,6 +101,8 @@ export default function AllContacts() {
             <th className="border border-gray-400 px-4 py-2">Phone No</th>
             <th className="border border-gray-400 px-16 py-2">Email</th>
             <th className="border border-gray-400 px-4 py-2">Gender</th>
+            <th className="border border-gray-400 px-4 py-2">Line 1</th>
+            <th className="border border-gray-400 px-4 py-2">Line 2</th>
             <th className="border border-gray-400 px-4 py-2">City</th>
             <th className="border border-gray-400 px-4 py-2">Country</th>
             <th className="border border-gray-400 px-4 py-2">Zip Code</th>
@@ -169,7 +172,7 @@ export default function AllContacts() {
                 </td>
                 <td className="border border-gray-400 px-4 py-2">
                   <input
-                    type="text"
+                    type="email"
                     value={user.email}
                     onBlur={(e) =>
                       handleInputChange(user._id, 'email', e.target.value)
@@ -205,6 +208,59 @@ export default function AllContacts() {
                     className="w-full focus:outline-none"
                   />
                 </td>
+                <td className="border border-gray-400 px-4 py-2">
+                <input
+                    type="text"
+                    value={user.address.line1}
+                    onBlur={(e) =>
+                      handleInputChange(
+                        user._id,
+                        'address',
+                        { line1: e.target.value }
+                      )
+                    }
+                    onChange={(e) =>
+                      setData((prevData) =>
+                        prevData?.map((u) =>
+                          u._id === user._id
+                            ? {
+                                ...u,
+                                address: { ...u.address, line1: e.target.value },
+                              }
+                            : u
+                        )
+                      )
+                    }
+                    className="w-full focus:outline-none"
+                  />
+                </td>
+                <td className="border border-gray-400 px-4 py-2">
+                <input
+                    type="text"
+                    value={user.address.line2}
+                    onBlur={(e) =>
+                      handleInputChange(
+                        user._id,
+                        'address',
+                        { line2: e.target.value }
+                      )
+                    }
+                    onChange={(e) =>
+                      setData((prevData) =>
+                        prevData?.map((u) =>
+                          u._id === user._id
+                            ? {
+                                ...u,
+                                address: { ...u.address, line2: e.target.value },
+                              }
+                            : u
+                        )
+                      )
+                    }
+                    className="w-full focus:outline-none"
+                  />
+                </td>
+
                 <td className="border border-gray-400 px-4 py-2">
                   <input
                     type="text"
